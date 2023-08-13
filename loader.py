@@ -1,58 +1,28 @@
-import psycopg2 as psycopg2
-import requests
+import abc
 
-DB_PARAMS = {
-    'dbname': 'cannabis',
-    'user': 'postgres',
-    'password': 'postgres',
-    'host': '127.0.0.1'
-}
+import psycopg2
 
 
-def extract_raw_data(size: int = 10):
-    try:
-        res = requests.get(f'https://random-data-api.com/api/cannabis/random_cannabis?size={size}')
-    except Exception as e:
-        return []
-
-    if res.status_code != 200:
-        return []
-
-    return res.json()
+class Loader(abc.ABC):
+    @abc.abstractmethod
+    def load(self, data):
+        ...
 
 
-def insert_data(table, columns, data: list[list]):
-    values = ', '.join(['%s'] * len(columns))
-    query = f'INSERT INTO {table}({",".join(columns)}) VALUES ({values})'
-    try:
-        with psycopg2.connect(**DB_PARAMS) as conn:
-            with conn.cursor() as cur:
-                cur.executemany(query, data)
-                conn.commit()
-    except Exception as e:
-        print(e)
-        return []
+class PostgresLoader(Loader):
+    def __init__(self, db_params: dict, table: str, columns: list[str]):
+        self.db_params = db_params
+        self.table = table
+        self.columns = columns
+        values = ', '.join(['%s'] * len(self.columns))
+        self.query = f'INSERT INTO {self.table}({",".join(self.columns)}) VALUES ({values})'
 
-
-def save_data(data: list[dict]):
-    table = 'staging.cannabis'
-    columns = (
-        'id', 'uid', 'strain',
-        'cannabinoid_abbreviation',
-        'cannabinoid', 'terpene', 'medical_use',
-        'health_benefit', 'category', 'type',
-        'buzzword', 'brand',
-    )
-    parsed_data = []
-
-    for line in data:
-        row = []
-        for c in columns:
-            row.append(line.get(c))
-        parsed_data.append(row)
-
-    insert_data(table, columns, parsed_data)
-
-
-data = extract_raw_data()
-save_data(data)
+    def load(self, data):
+        try:
+            with psycopg2.connect(**self.db_params) as conn:
+                with conn.cursor() as cur:
+                    cur.executemany(self.query, data)
+                    conn.commit()
+        except Exception as e:
+            print(e)
+            return []
