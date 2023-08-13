@@ -2,7 +2,14 @@ import dataclasses
 
 
 @dataclasses.dataclass
-class CannabisModel:
+class Model:
+    @classmethod
+    def get_columns(cls) -> list[str]:
+        ...
+
+
+@dataclasses.dataclass
+class CannabisModel(Model):
     id: int
     uid: str
     strain: str

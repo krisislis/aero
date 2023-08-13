@@ -3,18 +3,21 @@ from typing import Iterable
 
 import requests
 
+from model import Model
+
 
 class Extractor(abc.ABC):
     @abc.abstractmethod
-    def extract(self) -> Iterable:
+    def extract(self) -> Iterable[Model]:
         ...
 
 
 class ApiExtractor(Extractor):
-    def __init__(self, url: str):
+    def __init__(self, url: str, model: type):
         self.url = url
+        self.model = model
 
-    def extract(self) -> Iterable:
+    def extract(self) -> Iterable[Model]:
         try:
             res = requests.get(self.url)
         except Exception as e:
@@ -25,4 +28,4 @@ class ApiExtractor(Extractor):
             print('error')
             return []
 
-        return res.json()
+        return [self.model(**elem) for elem in res.json()]
