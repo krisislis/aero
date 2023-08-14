@@ -1,8 +1,12 @@
+import logging
+
 import settings
-from el_process import ELProcess
-from extractor import ApiExtractor
-from loader import PostgresLoader
-from model import CannabisModel
+from cannabis_el.el_process import ELProcess
+from cannabis_el.extractor import ApiExtractor
+from cannabis_el.loader import PostgresLoader
+from cannabis_el.model import CannabisModel
+
+logging.basicConfig(level=logging.INFO, filename='aero.log', filemode='w')
 
 DB_PARAMS = {
     'dbname': settings.DB_NAME,

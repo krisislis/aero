@@ -1,9 +1,10 @@
 import abc
+import logging
 from typing import Iterable
 
 import requests
 
-from model import Model
+from cannabis_el.model import Model
 
 
 class Extractor(abc.ABC):
@@ -21,11 +22,11 @@ class ApiExtractor(Extractor):
         try:
             res = requests.get(self.url)
         except Exception as e:
-            print(e)
+            logging.error('Fail to extract data from api', e)
             return []
 
         if res.status_code != 200:
-            print('error')
+            logging.error(f'Get {res.status_code} from {self.url}')
             return []
 
         return [self.model(**elem) for elem in res.json()]

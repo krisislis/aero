@@ -1,4 +1,5 @@
 import abc
+import logging
 
 import psycopg2
 
@@ -32,5 +33,5 @@ class PostgresLoader(Loader):
                     cur.executemany(self.query, parsed_data)
                     conn.commit()
         except Exception as e:
-            print(e)
+            logging.error('Fail to load data into database', e)
             return []
