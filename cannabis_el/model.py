@@ -1,14 +1,12 @@
-import dataclasses
+from pydantic import BaseModel
 
 
-@dataclasses.dataclass
-class Model:
+class Model(BaseModel):
     @classmethod
     def get_columns(cls) -> list[str]:
         ...
 
 
-@dataclasses.dataclass
 class CannabisModel(Model):
     id: int
     uid: str
@@ -24,7 +22,7 @@ class CannabisModel(Model):
     brand: str
 
     @classmethod
-    def get_columns(cls):
+    def get_columns(cls) -> list[str]:
         return [
             'id', 'uid', 'strain',
             'cannabinoid_abbreviation',

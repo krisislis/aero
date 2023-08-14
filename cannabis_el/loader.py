@@ -1,12 +1,15 @@
 import abc
 import logging
+from typing import Iterable
 
 import psycopg2
+
+from cannabis_el.model import Model
 
 
 class Loader(abc.ABC):
     @abc.abstractmethod
-    def load(self, data):
+    def load(self, data: Iterable[Model]) -> None:
         ...
 
 
@@ -18,7 +21,7 @@ class PostgresLoader(Loader):
         values = ', '.join(['%s'] * len(self.columns))
         self.query = f'INSERT INTO {self.table}({",".join(self.columns)}) VALUES ({values})'
 
-    def load(self, data):
+    def load(self, data: Iterable[Model]) -> None:
         parsed_data = []
 
         for line in data:
@@ -34,4 +37,3 @@ class PostgresLoader(Loader):
                     conn.commit()
         except Exception as e:
             logging.error('Fail to load data into database', e)
-            return []
