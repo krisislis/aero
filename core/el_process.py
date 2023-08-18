@@ -1,5 +1,5 @@
-from cannabis_el.extractor import Extractor
-from cannabis_el.loader import Loader
+from core.extractor import Extractor
+from core.loader import Loader
 
 
 class ELProcess:

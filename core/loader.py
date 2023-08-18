@@ -4,7 +4,7 @@ from typing import Iterable
 
 import psycopg2
 
-from cannabis_el.model import Model
+from core.model import Model
 
 
 class Loader(abc.ABC):

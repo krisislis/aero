@@ -4,7 +4,7 @@ from typing import Iterable
 
 import requests
 
-from cannabis_el.model import Model
+from core.model import Model
 
 
 class Extractor(abc.ABC):
