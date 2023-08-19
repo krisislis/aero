@@ -1,6 +1,6 @@
 import logging
 
-import settings
+from settings import SETTINGS
 from core.el_process import ELProcess
 from core.extractor import ApiExtractor
 from core.loader import PostgresLoader
@@ -9,10 +9,10 @@ from core.model import Model
 logging.basicConfig(level=logging.INFO, filename='logs/aero.log', filemode='w')
 
 DB_PARAMS = {
-    'dbname': settings.DB_NAME,
-    'user': settings.DB_USER,
-    'password': settings.DB_PASSWORD,
-    'host': settings.DB_HOST
+    'dbname': SETTINGS['DB_NAME'],
+    'user': SETTINGS['DB_USER'],
+    'password': SETTINGS['DB_PASSWORD'],
+    'host': SETTINGS['DB_HOST'],
 }
 
 
