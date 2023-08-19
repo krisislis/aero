@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 import pendulum
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
@@ -10,7 +8,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'retries': 3,
-    'retry_delay': timedelta(minutes=10),
+    'retry_delay': pendulum.duration(minutes=10),
 }
 
 dag = DAG(
@@ -18,7 +16,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval='0 */12 * * *',
     catchup=False,
-    start_date=pendulum.now(),
+    start_date=pendulum.datetime(2023, 8, 19, tz='Europe/Moscow'),
 )
 
 start = DummyOperator(

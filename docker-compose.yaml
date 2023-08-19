@@ -26,17 +26,17 @@ x-airflow-common:
       condition: service_healthy
 
 services:
-  cannabis-db:
+  aero-db:
     image: postgres:12
     environment:
-      - POSTGRES_DB=cannabis
+      - POSTGRES_DB=aero
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
       - ./migrations:/docker-entrypoint-initdb.d
-      - cannabis-db-volume:/var/lib/postgresql/data
+      - aero-db-volume:/var/lib/postgresql/data
 
   postgres:
     image: postgres:13
@@ -233,4 +233,4 @@ services:
 
 volumes:
   postgres-db-volume:
-  cannabis-db-volume:
+  aero-db-volume:
